@@ -1,5 +1,6 @@
 import {useState, useContext, useEffect} from 'react';
 import {AsyncStorage} from 'react-native';
+import {MediaContext} from '../contexts/MediaContext';
 
 const apiUrl = 'http://media.mw.metropolia.fi/wbma/';
 
@@ -71,6 +72,32 @@ const mediaAPI = () => {
       //console.log(json.error);
     }
   };
+
+  const getAvatar = (user) => {
+    const [avatar, setAvatar] = useState('http://placekitten.com/100/100');
+    //console.log('avatar', apiUrl + 'tags/avatar_' + user.user_id);
+    useEffect(() => {
+      fetchGetUrl(apiUrl + 'tags/avatar_' + user.user_id).then((json) => {
+        //console.log('avatarjson', json[0].filename);
+        setAvatar(apiUrl + 'uploads/' + json[0].filename);
+      });
+    }, []);
+    return avatar;
+  };
+
+  const userToContext = async () => { // Call this when app starts (= Home.js)
+    const {user, setUser} = useContext(MediaContext);
+    const getFromStorage = async () => {
+      const storageUser = JSON.parse(await AsyncStorage.getItem('user'));
+      //console.log('storage', storageUser);
+      setUser(storageUser);
+    }
+    useEffect(() => {
+      getFromStorage();
+    }, []);
+    return [user];
+  };
+
  
 
 
@@ -79,6 +106,8 @@ const mediaAPI = () => {
     signInAsync,
     registerAsync,
     userFree,
+    getAvatar,
+    userToContext,
     
   };
 };

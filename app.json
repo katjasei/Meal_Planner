@@ -1,5 +1,8 @@
 {
   "expo": {
+    "androidStatusBar": {
+      "backgroundColor": "#000000"
+    },
     "name": "MealPlanner",
     "slug": "MealPlanner",
     "privacy": "public",

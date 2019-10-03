@@ -7,7 +7,7 @@ import {Ionicons} from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import {AppLoading} from 'expo';
 
-import Welcome from './views/Welcome';
+import {MediaProvider} from './contexts/MediaContext';
 import Navigator from './navigators/Navigator'
 
 const App = () => {
@@ -34,9 +34,9 @@ const App = () => {
   }
 
   return (
-   
+   <MediaProvider>
       <Navigator/> 
-      
+   </MediaProvider>   
   );
 };
 

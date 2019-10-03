@@ -146,6 +146,7 @@ async function logIn() {
       // type === 'cancel'
     }
   } catch ({ message }) {
+    
     alert(`Facebook Login Error: ${message}`);
   }
 
