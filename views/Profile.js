@@ -1,11 +1,21 @@
 import React, {useContext, useState} from 'react';
 import {StyleSheet, View,  AsyncStorage, Image} from 'react-native';
 import PropTypes from 'prop-types';
-import { Container, Title, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right } from 'native-base';
+import { Container, Title, Accordion, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right } from 'native-base';
+import DatePicker from 'react-native-datepicker';
+
 import {MediaContext} from '../contexts/MediaContext';
 import mediaAPI from '../hooks/ApiHooks';
 
 const Profile = (props) => {
+
+
+  const dataArray = [
+    { title: "Breakfast", content: ["Lorem ipsum dolor sit amet","Vegetables"] },
+    { title: "Lunch", content: "Lorem ipsum dolor sit amet" },
+    { title: "Dinner", content: "Lorem ipsum dolor sit amet" },
+    { title: "Extra", content: "Lorem ipsum dolor sit amet" }
+  ];
 
   const {user} = useContext(MediaContext);
  // console.log('user', user);
@@ -16,11 +26,9 @@ const Profile = (props) => {
     props.navigation.navigate('Auth');
   };
 
-
+[date,setDate] = useState();
 
   return (
-
-
     <Container>
         <Header style={{backgroundColor:"white"}}>
           <Left> 
@@ -46,24 +54,49 @@ const Profile = (props) => {
                 height: 100,}} />
               </Left>
             </CardItem>
-            <CardItem>
+          <CardItem>
+            <Body>
               <Body>
-                <Image source={{uri: 'Image URL'}} style={{height: 200, width: 200, flex: 1}}/>
-                <Text>
-                  //Your text here
-                </Text>
-              </Body>
-            </CardItem>
-            <CardItem>
-              <Left>
-                <Button transparent textStyle={{color: '#87838B'}}>
-                  <Icon name="logo-github" />
-                  <Text>1,926 stars</Text>
-                </Button>
-              </Left>
-            </CardItem>
+          <DatePicker
+          style={{width: 200}}
+          date={date} //initial date from state
+          mode="date" //The enum of date, datetime and time
+          placeholder="select date"
+          format="DD.MM.YYYY"
+          minDate="01.01.2018"
+          maxDate="01.01.2022"
+          confirmBtnText="Confirm"
+          cancelBtnText="Cancel"
+          onDateChange={(date) => {setDate(date)}}
+          customStyles={{
+            dateIcon: {
+              position: 'absolute',
+              left: 0,
+              top: 4,
+              marginLeft: 0
+            },
+            dateInput: {
+              marginLeft: 36
+            }
+          }}
+          />
+          </Body>
+          </Body>
+          </CardItem>
           </Card>
+
+          <Text>Plan for {date} </Text>
+
+          <Accordion
+
+            dataArray={dataArray}
+            headerStyle={{ backgroundColor: "#b7daf8" }}
+            contentStyle={{ backgroundColor: "#ddecf8", flex: 1, flexDirection: 'column'}}
+          />
+
+
         </Content>
+        
         <Button rounded info onPress={signOutAsync} style={{marginRight:50,marginLeft:50,marginBottom:10,justifyContent:"center"}}><Text>Logout!</Text></Button>
       </Container>
 
