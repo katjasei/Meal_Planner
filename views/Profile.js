@@ -64,6 +64,7 @@ const Profile = (props) => {
             </CardItem>
           </Card>
         </Content>
+        <Button rounded info onPress={signOutAsync} style={{marginRight:50,marginLeft:50,marginBottom:10,justifyContent:"center"}}><Text>Logout!</Text></Button>
       </Container>
 
     
