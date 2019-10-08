@@ -57,6 +57,9 @@ const StackNavigator = createStackNavigator({
   Logout: {
     screen: Welcome
   },
+  Profile: {
+    screen: Profile
+  },
   Ingredients: {
     screen: Ingredients,
   },

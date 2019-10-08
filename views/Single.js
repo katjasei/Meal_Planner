@@ -7,7 +7,7 @@ const Single = (props) => {
 
     return (
       <View style ={styles.welcomeButtons}>
-       <Text>Welcome to MyRecipes Screen</Text>
+       <Text>Welcome to Single Screen</Text>
       </View>
     );
   };
