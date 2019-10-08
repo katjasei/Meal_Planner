@@ -173,7 +173,7 @@ const Profile = (props) => {
           <Left>
           <Body>
           <Text>{item.title}</Text>
-          <Text> {item.calories}</Text>
+          <Text> {}</Text>
           </Body>
           <Button transparent style ={{paddingLeft:30}}  
           onPress={() => { addToMealPlan (mealAdd,item.title); }}><Icon name= "add"></Icon></Button>
