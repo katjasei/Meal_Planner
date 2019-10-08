@@ -78,9 +78,15 @@ const Home = (props) => {
         </Text>
       )}
       <RecipeList navigation={navigation}></RecipeList>
-    </Container>
-  );
-};
+     </Container>
+    );
+  };
+
+  const styles = StyleSheet.create({
+    welcomeButtons: {
+      alignItems:"center",
+      paddingTop:200,
+    },
 
 const styles = StyleSheet.create({
   welcomeButtons: {

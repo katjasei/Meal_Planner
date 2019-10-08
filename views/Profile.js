@@ -1,33 +1,100 @@
-import React, {useContext, useState} from 'react';
-import {StyleSheet, View,  AsyncStorage, Image} from 'react-native';
+import React, {useContext, useState, useEffect} from 'react';
+import {StyleSheet, View,  AsyncStorage, Image, Alert} from 'react-native';
 import PropTypes from 'prop-types';
-import { List, ListItem, Separator, Container, Title, Accordion, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right } from 'native-base';
+import { List as BaseList, Container, Title, Header, Content, Card, CardItem, Thumbnail, Text, Button, Left, Body, Right } from 'native-base';
 import DatePicker from 'react-native-datepicker';
-import { Collapse, CollapseHeader, CollapseBody } from "accordion-collapse-react-native";
+import { Icon } from 'react-native-elements'
 
 import {MediaContext} from '../context/MediaContext';
 import mediaAPI from '../hooks/ApiHooks';
+import Meallist from '../components/Meallist';
+  
+  const ArrayB={objects:[], date:""};
+  const ArrayL={objects:[], date:""};
+  const ArrayD={objects:[], date:""};
+  const ArrayE={objects:[], date:""};
+
+  const breakfastCalories = 0;
+  const lunchCalories = 0;
+  const dinnerCalories = 0;
+  const extraCalories = 0;
+
+  const mealsArray = [
+    {title:"BREAKFAST", content: ArrayB, calories: breakfastCalories},
+    {title:"LUNCH", content: ArrayL, calories: lunchCalories},
+    {title:"DINNER", content: ArrayD, calories: dinnerCalories}, 
+    {title:"EXTRA", content: ArrayE, calories: extraCalories}]
+    
 
 const Profile = (props) => {
 
-
+  const {navigation} = props;
   const {user} = useContext(MediaContext);
-   
+
+  [mealAdd,setMealAdd] = useState(false);
   
-  console.log('user', user);
+  useEffect(() => console.log("mealAdd", mealAdd),[mealAdd]);
+
   const {getAvatar} = mediaAPI();
 
   const signOutAsync = async () => {
     await AsyncStorage.clear();
-    props.navigation.navigate('Auth');
+    navigation.navigate('Auth');
   };
   
-  const day = new Date().getDate();
+      const day = new Date().getDate();
       const month = new Date().getMonth() + 1;
       const year = new Date().getFullYear();
 
-
    [date,setDate] = useState(day +"."+month+"."+year);
+   [file, setFile] = useState({});
+
+    const addToMealPlan = (mealAdd, item) => {
+      
+      if (!mealAdd && navigation.state.params) {
+      
+      const file1 = navigation.state.params.file;
+      const recipeInfo = JSON.parse(file1.description);
+      if(item ==="BREAKFAST") {
+      ArrayB.objects.push(file1);
+      ArrayB.date = date;
+      breakfastCalories += recipeInfo.totalNutrients.calories;
+      console.log("CAAAAALLLLOOORIEEES", breakfastCalories);
+      console.log("arrayB", ArrayB);
+
+  
+    }
+      
+      if (item==="LUNCH") {
+      ArrayL.objects.push(file1);
+      ArrayL.date = date;
+      }
+      
+      if (item==="DINNER") {
+      ArrayD.objects.push(file1);
+      ArrayD.date = date;
+     }
+      
+      if (item==="EXTRA") {
+      ArrayE.objects.push(file1);
+      ArrayE.date = date;
+      }
+
+      setMealAdd(true);
+      return setFile(file1);}
+
+      else { Alert.alert(
+        //title
+        'Message',
+        //body
+        ' At first you need to choose dish! Press: Add to Meal Plan',
+        [
+          {text: 'Ok', onPress: () => console.log('OK Pressed')},
+        ],
+        { cancelable: true }
+        //clicking out side of alert will not cancel
+      );}
+    } 
 
   return (
     <Container>
@@ -84,65 +151,52 @@ const Profile = (props) => {
           </Body>
           </Body>
           </CardItem>
-          </Card>
-
           <Text style ={{textAlign:"center", justifyContent:"center",paddingTop:5, paddingBottom:5, fontSize:20}}>Plan for {date} </Text>
-         
-         <Card style={{flex: 0}}>
-         <CardItem>
-         <Left>
-         <Body>
-         <Text>BREAKFAST</Text>
-         </Body>
-         <Button transparent style ={{paddingLeft:30}}><Icon name= "add-circle"></Icon></Button>
-        
-         </Left>
-         </CardItem>
-         </Card>
-         <Card style={{flex: 0}}>
-         <CardItem>
-         <Left>
-         <Body>
-         <Text>LUNCH</Text>
-         </Body>
-         <Button transparent style ={{paddingLeft:30}}><Icon name= "add-circle"></Icon></Button>
-        
-         </Left>
-         </CardItem>
-         </Card>
+        <CardItem>
+            <Text style = {{fontSize:20, paddingLeft:40}}>Add to Meal Plan</Text>
+            <Right>
+            <Button rounded primary 
+             style ={{ width:50, height:45, justifyContent: 
+             'center', alignItems: 'center', marginRight:20}}
+             onPress={() => {navigation.navigate("Home");}}><Icon name= "add"></Icon>
+                </Button>
+                </Right>           
+            </CardItem>
+        </Card>
+         <BaseList 
+         dataArray={mealsArray}
+         renderRow={
+          (item) =>
+          <View>
+          <Card style={{flex: 0}}  onPress={() => { addToMealPlan (mealAdd,item.title); }}>
+          <CardItem>
+          <Left>
+          <Body>
+          <Text>{item.title}</Text>
+          <Text> {}</Text>
+          </Body>
+          <Button transparent style ={{paddingLeft:30}}  
+          onPress={() => { addToMealPlan (mealAdd,item.title); }}><Icon name= "add"></Icon></Button>
+          </Left>
+          </CardItem>
+          </Card>
+          <Meallist navigation={navigation}
+          mediaArray = {item.content.objects}
+           />
+           </View>
+        }
+        keyExtractor={(item, index) => index.toString()}
+         />
 
-         <Card style={{flex: 0}}>
-         <CardItem>
-         <Left>
-         <Body>
-         <Text>DINNER</Text>
-         </Body>
-         <Button transparent style ={{paddingLeft:30}}><Icon name= "add-circle"></Icon></Button>
-        
-         </Left>
-         </CardItem>
-         </Card>
-
-         <Card style={{flex: 0}}>
-         <CardItem>
-         <Left>
-         <Body>
-         <Text>EXTRA</Text>
-         </Body>
-         <Button transparent style ={{paddingLeft:30}}><Icon name= "add-circle"></Icon></Button>
-        
-         </Left>
-         </CardItem>
-         </Card>
-
+        <Card>
+          <CardItem>
+        <Button rounded info onPress={signOutAsync} style={{marginRight:50,marginLeft:50,marginBottom:10,justifyContent:"center"}}><Text>Logout!</Text></Button>
+        </CardItem>
+        </Card>
 
         </Content>
-        
-        <Button rounded info onPress={signOutAsync} style={{marginRight:50,marginLeft:50,marginBottom:10,justifyContent:"center"}}><Text>Logout!</Text></Button>
-      </Container>
-
-    
-  );
+        </Container>
+        );
 };
 
 const styles = StyleSheet.create({
