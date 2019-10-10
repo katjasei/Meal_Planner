@@ -57,23 +57,16 @@ const StackNavigator = createStackNavigator({
     screen: Single,
     navigationOptions: {
       header: null // this will hide the header
+    }
   },
   Logout: {
-    screen: Welcome,
-    navigationOptions: {
-      header: null,
-    }
+    screen: Welcome
   },
   Ingredients: {
     screen: Ingredients,
   },
   BMRCalculator: {
     screen: BMRCalculator,
-    navigationOptions: {
-      headerStyle:{
-        height: 30
-      }
-    }
   },
   Profile: {
     screen: Profile
